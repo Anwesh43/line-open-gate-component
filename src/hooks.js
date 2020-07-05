@@ -1,4 +1,5 @@
 import {useEffect, useState} from 'react'
+import {sinify, divideScale} from './util'
 
 export const useAnimatedScale = (scGap, delay, n) => {
     const [scale, setScale] = useState(0)
@@ -42,5 +43,35 @@ export const useDimension = () => {
     return {
         w, 
         h,
+    }
+}
+
+export const useStyle = (w, h, scale, n) => {
+    const sf = sinify(scale)
+    const x = w / 2 
+    const hGap = h / n 
+    const background = '#2196F3'
+    const position = 'absolute'
+    return {
+        getHorizStyle(i) {
+            const sfi = divideScale(sf, i, n)
+            const sfi1 = divideScale(sfi, 0, 2)
+            const sfi2 = divideScale(sfi, 1, 2)
+            const left = `${x - (hGap / 2) * sfi1}px`
+            const top = `${hGap * i + hGap}px`
+            const width = `${hGap * (sf1 + sf2)}px`
+            const height = `${Math.min(w, h) / 60}px`
+            return {position, left, top, width, height, background}
+        },
+
+        getVertStyle(i, j) {
+            const sfi = divideScale(sf, i, n)
+            const sfij = divideScale(sf, j, 2)
+            const top = `${hGap * i}px`
+            const left = `${x - (hGap * (1 - 2 * j) * sfi)}px`
+            const width = `${Math.min(w, h) / 60}px`
+            const height = `${hGap}px`
+            return {position, width, height, left, top, background}
+        }
     }
 }
