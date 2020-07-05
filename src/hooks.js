@@ -19,6 +19,7 @@ export const useAnimatedScale = (scGap, delay, n) => {
                     if (currScale > 1) {
                         setScale(0)
                         setAnimated(false)
+                        clearInterval(interval)
                         if (i + dir < n || i + dir >= 0) {
                             setI(i + dir)
                         } else {
@@ -54,10 +55,9 @@ export const useStyle = (w, h, scale, n) => {
     const position = 'absolute'
     return {
         getHorizStyle(i) {
-            const sfi = divideScale(sf, i, n)
-            const sfi1 = divideScale(sfi, 0, 2)
-            const sfi2 = divideScale(sfi, 1, 2)
-            const left = `${x - (hGap / 2) * sfi1}px`
+            const sf1 = divideScale(sf, 0, 2)
+            const sf2 = divideScale(sf, 1, 2)
+            const left = `${x - (hGap) * sf1}px`
             const top = `${hGap * i + hGap}px`
             const width = `${hGap * (sf1 + sf2)}px`
             const height = `${Math.min(w, h) / 60}px`
@@ -65,13 +65,18 @@ export const useStyle = (w, h, scale, n) => {
         },
 
         getVertStyle(i, j) {
-            const sfi = divideScale(sf, i, n)
-            const sfij = divideScale(sf, j, 2)
+            const sfj = divideScale(sf, j, 2)
             const top = `${hGap * i}px`
-            const left = `${x - (hGap * (1 - 2 * j) * sfi)}px`
+            const left = `${x - (hGap * (1 - 2 * j) * sfj)}px`
             const width = `${Math.min(w, h) / 60}px`
             const height = `${hGap}px`
             return {position, width, height, left, top, background}
+        },
+
+        getButtonStyle() {
+            const left = '0px'
+            const top = '0px'
+            return {position, left, top}
         }
     }
 }
